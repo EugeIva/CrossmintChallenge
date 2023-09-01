@@ -1,7 +1,8 @@
 package com.example.crossmintchallenge.client;
 
 import com.example.crossmintchallenge.CrossmintPapams;
-import com.example.crossmintchallenge.model.PolyanetRequest;
+import com.example.crossmintchallenge.model.ComethRequest;
+import com.example.crossmintchallenge.model.Direction;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,40 +14,41 @@ import reactor.util.retry.Retry;
 
 import java.time.Duration;
 
-
 @Log4j2
 @Component
 @RequiredArgsConstructor
-public class PolyanetClientImpl implements PolyanetClient {
+public class ComethClientImpl implements ComethClient {
+
     private final CrossmintPapams crossmintPapams;
-    private final String path = "polyanets";
+    private final String path = "comeths";
 
     private final WebClient webClient;
 
     @Override
-    public void add(Integer row, Integer col) {
+    public void add(Integer row, Integer col, Direction direction) {
         String response = webClient.post()
                 .uri(path)
-                .body(prepareBody(col, row), PolyanetRequest.class).retrieve()
+                .body(prepareBody(col, row, direction), ComethRequest.class).retrieve()
                 .bodyToMono(String.class)
                 .retryWhen(Retry.backoff(3, Duration.ofSeconds(2)))
                 .block();
-        log.info("Polyanet added: {}:{}", row, col);
+        log.info("Cometh added: {}:{}:{}", row, col, direction.value());
     }
 
     @Override
     public void delete(Integer row, Integer col) {
         String response = webClient.method(HttpMethod.DELETE)
                 .uri(path)
-                .body(prepareBody(col, row), PolyanetRequest.class)
+                .body(prepareBody(col, row, null), ComethRequest.class)
                 .retrieve()
                 .bodyToMono(String.class)
                 .retryWhen(Retry.backoff(3, Duration.ofSeconds(2)))
                 .block();
-        log.info("Polyanet deleted: {}:{}", row, col);
+        log.info("Soloon deleted: {}:{}", row, col);
     }
 
-    private Mono<PolyanetRequest> prepareBody(Integer col, Integer row) {
-        return Mono.just(new PolyanetRequest(col, row, crossmintPapams.getCandidateId()));
+    private Mono<ComethRequest> prepareBody(Integer col, Integer row, Direction direction) {
+        String directionString = direction == null? null : direction.value();
+        return Mono.just(new ComethRequest(col, row, crossmintPapams.getCandidateId(), directionString));
     }
 }

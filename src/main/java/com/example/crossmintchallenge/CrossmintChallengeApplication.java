@@ -1,7 +1,5 @@
 package com.example.crossmintchallenge;
 
-import com.example.crossmintchallenge.phase.Phase;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

@@ -1,12 +1,13 @@
-package com.example.crossmintchallenge.client;
+package com.example.crossmintchallenge.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PolyanetRequest {
+public class ComethRequest {
     private Integer column;
     private Integer row;
     private String candidateId;
+    private String direction;
 }

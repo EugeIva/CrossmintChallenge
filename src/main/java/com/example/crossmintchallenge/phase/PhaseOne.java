@@ -12,7 +12,7 @@ public class PhaseOne implements Phase {
 
     @PostConstruct
     void init() {
-        execute();
+//        execute();
     }
     @Override
     public void execute() {
